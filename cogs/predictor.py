@@ -2,10 +2,10 @@ import re
 import discord
 from discord.ext import commands
 from utilities.solver import solve_hint
-from utilities.identify import predict_pokemon_from_url
+from utilities.predict import extract_pokemon_name
 
 
-class SpawnPredictor(commands.Cog):
+class PredictorCOG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -46,15 +46,11 @@ class SpawnPredictor(commands.Cog):
 
                     image_url = message.embeds[0].image.url
 
-                    predictions = await predict_pokemon_from_url(image_url)
-                    top_prediction = max(predictions, key=lambda x: x[1])
-
-                    name = top_prediction[0]
-                    score = top_prediction[1]
+                    predictions = await extract_pokemon_name(image_url)
 
                     embed = discord.Embed(
                         title="🔮 Pokémon Prediction",
-                        description=f"### Predicted Pokémon : {name}",
+                        description=f"### Predicted Pokémon : {predictions}",
                         color=0xffca7b,
                     )
 
@@ -62,4 +58,4 @@ class SpawnPredictor(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(SpawnPredictor(bot))
+    bot.add_cog(PredictorCOG(bot))
