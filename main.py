@@ -5,13 +5,16 @@ import asyncio
 import datetime
 
 import discord
+from discord.ext import bridge
 
 intents = discord.Intents.all()
-bot = discord.Bot(intents=intents, command_prefix="nb!")
+bot = bridge.Bot(command_prefix="nb!", intents=intents)
 
 import dotenv
+
 dotenv.load_dotenv()
 token = str(os.getenv("TOKEN"))
+
 
 @bot.event
 async def on_ready():
@@ -43,12 +46,10 @@ async def on_ready():
     print(f"----- + Loaded : {len(bot.cogs)} Cogs + ------")
     print("--------------------------------")
 
-@bot.slash_command(
+
+@bot.bridge_command(
     name="ping",
     description="Check Bot's Latency & Uptime",
-    integration_types={
-        discord.IntegrationType.guild_install,
-    },
 )
 async def ping(ctx: discord.ApplicationContext):
     latency = bot.latency * 1000
@@ -65,6 +66,8 @@ async def ping(ctx: discord.ApplicationContext):
 
     await ctx.respond(embed=embed)
 
+
+bot.load_extension("cogs.commands")
 bot.load_extension("cogs.predictor")
 
 bot.run(token)
