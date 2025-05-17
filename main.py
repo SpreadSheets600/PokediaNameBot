@@ -1,11 +1,12 @@
 import os
-import re
-import aiohttp
-import asyncio
 import datetime
 
 import discord
 from discord.ext import bridge
+
+from utilities.collector import init_db
+
+init_db()
 
 intents = discord.Intents.all()
 bot = bridge.Bot(command_prefix="nb!", intents=intents)
@@ -18,7 +19,6 @@ token = str(os.getenv("TOKEN"))
 
 @bot.event
 async def on_ready():
-
     print("--------------------------------")
     print("----- + PokeDia Name Bot + -----")
     print("--------------------------------")
@@ -69,5 +69,6 @@ async def ping(ctx: discord.ApplicationContext):
 
 bot.load_extension("cogs.commands")
 bot.load_extension("cogs.predictor")
+bot.load_extension("cogs.collector")
 
 bot.run(token)
